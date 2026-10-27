@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Foundora - Professional Campus Lost & Found System</title>
+  <title>Foundora - University Lost & Found Portal</title>
   <meta name="google-site-verification" content="N2_Ip9FllZRY3be3ok86Yd4ATkATPRfGOY_XEy7qJLE" />
   <script src="https://cdn.tailwindcss.com"></script>
 
@@ -11,135 +11,221 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { 
-      getFirestore, collection, addDoc, getDocs, doc, updateDoc, query, where, onSnapshot 
+      getFirestore, collection, addDoc, getDocs, doc, updateDoc, query, where, onSnapshot, arrayUnion 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // ⚠️ PASTE YOUR FIREBASE KEYS HERE
     const firebaseConfig = {
-  apiKey: "AIzaSyBaLg2GjpjWxnwvzeuFE0r05G1mcolf-go",
-  authDomain: "foundora-d3e5a.firebaseapp.com",
-  projectId: "foundora-d3e5a",
-  storageBucket: "foundora-d3e5a.firebasestorage.app",
-  messagingSenderId: "408104951399",
-  appId: "1:408104951399:web:d2cb186afa1d46a6677ec2",
-  measurementId: "G-2ZBL2YW3P3"
-};
+      apiKey: "AIzaSyBaLg2GjpjWxnwvzeuFE0r05G1mcolf-go",
+      authDomain: "foundora-d3e5a.firebaseapp.com",
+      projectId: "foundora-d3e5a",
+      storageBucket: "foundora-d3e5a.firebasestorage.app",
+      messagingSenderId: "408104951399",
+      appId: "1:408104951399:web:d2cb186afa1d46a6677ec2",
+      measurementId: "G-2ZBL2YW3P3"
+    };
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     window.db = db;
-    window.fs = { collection, addDoc, getDocs, doc, updateDoc, query, where, onSnapshot };
+    window.fs = { collection, addDoc, getDocs, doc, updateDoc, query, where, onSnapshot, arrayUnion };
     window.dbReady = true;
   </script>
 </head>
-<body class="bg-slate-100 min-h-screen font-sans text-slate-800">
+<body class="bg-slate-900 min-h-screen font-sans text-slate-800 relative bg-fixed bg-cover bg-center" style="background-image: linear-gradient(to bottom, rgba(15, 23, 42, 0.45), rgba(15, 23, 42, 0.50)), url('1000328288.jpg');">
 
-  <!-- TOP NAVBAR -->
-  <header class="bg-white border-b px-6 py-4 flex justify-between items-center sticky top-0 z-30 shadow-sm">
-    <div class="flex items-center gap-3">
-      <div class="w-9 h-9 bg-indigo-600 text-white font-black text-xl flex items-center justify-center rounded-xl shadow">F</div>
-      <div>
-        <h1 class="text-xl font-extrabold text-slate-900 tracking-tight">Foundora</h1>
-        <span id="headerCollegeInfo" class="text-[11px] font-semibold text-indigo-600">Not Authenticated</span>
+  <!-- OFFICIAL UNIVERSITY PORTAL HEADER -->
+  <header class="bg-slate-950/85 backdrop-blur-md border-b border-slate-800 text-white sticky top-0 z-40 shadow-2xl">
+    <div class="bg-indigo-950/85 px-6 py-1.5 border-b border-indigo-900/50 flex justify-between items-center text-xs text-slate-300 font-semibold">
+      <div class="flex items-center gap-4">
+        <span>🏛️ Official Campus Network Portal</span>
+        <span class="hidden md:inline text-indigo-400">|</span>
+        <span class="hidden md:inline">24/7 Security & Student Desk</span>
       </div>
+      <div id="headerCollegeInfo" class="font-bold text-amber-400">Not Authenticated</div>
     </div>
-    <div id="navControls" class="flex items-center gap-3 hidden">
-      <button onclick="switchTab('feed')" class="text-xs font-bold text-slate-600 hover:text-indigo-600">Feed</button>
-      <button onclick="switchTab('vault')" class="text-xs font-bold text-slate-600 hover:text-indigo-600">Campus Vault</button>
-      <button onclick="switchTab('profile')" class="text-xs font-bold text-slate-600 hover:text-indigo-600">👤 Profile</button>
-      <button onclick="switchTab('history')" class="text-xs font-bold text-slate-600 hover:text-indigo-600">History & Stats</button>
-      <button onclick="switchTab('notifications')" class="text-xs font-bold text-slate-600 hover:text-indigo-600">🔔 Notifications</button>
-      <button onclick="switchTab('settings')" class="text-xs font-bold text-slate-600 hover:text-indigo-600">⚙️ Settings</button>
-      <button onclick="logout()" class="bg-slate-200 text-slate-700 text-xs px-3 py-1.5 rounded-lg font-bold">Logout</button>
+
+    <div class="px-6 py-4 flex justify-between items-center max-w-7xl mx-auto">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 bg-indigo-600 text-white font-black text-2xl flex items-center justify-center rounded-2xl shadow-lg border border-indigo-400/40">F</div>
+        <div>
+          <h1 class="text-2xl md:text-3xl font-black text-white tracking-tight uppercase">Foundora</h1>
+          <p class="text-xs text-indigo-300 font-bold uppercase tracking-wider">University Campus Network</p>
+        </div>
+      </div>
+
+      <div id="navControls" class="flex items-center gap-2 hidden flex-wrap justify-end">
+        <button onclick="switchTab('feed')" class="text-sm font-bold px-3 py-1.5 rounded-xl text-slate-200 hover:bg-slate-800 hover:text-white transition">Feed</button>
+        <button onclick="switchTab('foundIt')" class="text-sm font-bold px-3 py-1.5 rounded-xl text-emerald-300 hover:bg-slate-800 transition">✔️ I Found It</button>
+        <button onclick="switchTab('gaveIt')" class="text-sm font-bold px-3 py-1.5 rounded-xl text-amber-300 hover:bg-slate-800 transition">🤝 I Gave It</button>
+        <button onclick="switchTab('vault')" class="text-sm font-bold px-3.5 py-2 rounded-xl text-slate-200 hover:bg-slate-800 hover:text-white transition">Campus Vault</button>
+        <button onclick="switchTab('profile')" class="text-sm font-bold px-3.5 py-2 rounded-xl text-slate-200 hover:bg-slate-800 hover:text-white transition">👤 Profile</button>
+        <button onclick="switchTab('history')" class="text-sm font-bold px-3.5 py-2 rounded-xl text-slate-200 hover:bg-slate-800 hover:text-white transition">📜 History</button>
+        <button onclick="switchTab('notifications')" class="text-sm font-bold px-3.5 py-2 rounded-xl text-slate-200 hover:bg-slate-800 hover:text-white transition">🔔 Alerts</button>
+        <button onclick="switchTab('settings')" class="text-sm font-bold px-3.5 py-2 rounded-xl text-slate-200 hover:bg-slate-800 hover:text-white transition">⚙️ Settings</button>
+        <button onclick="logout()" class="bg-rose-600 hover:bg-rose-700 text-white text-xs px-4 py-2 rounded-xl font-bold shadow transition ml-2">Logout</button>
+      </div>
     </div>
   </header>
 
-  <main class="max-w-6xl mx-auto py-6 px-4">
+  <!-- HERO BANNER -->
+  <div class="relative bg-slate-900/30 backdrop-blur-xs text-white py-8 px-6 mb-6 overflow-hidden border-b border-slate-800 shadow-2xl">
+    <div class="relative max-w-6xl mx-auto text-center space-y-3">
+      <span class="inline-block bg-indigo-600/90 text-indigo-100 text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest border border-indigo-400/40 shadow-lg">Official Campus Lost & Found Hub</span>
+      <h2 class="text-2xl md:text-4xl font-black tracking-tight text-white drop-shadow-md">Lost or Found Something on Campus?<br/><span class="text-indigo-400">Report & Connect Live with Campus Peers</span></h2>
+
+      <div class="flex flex-wrap justify-center items-center gap-3 pt-2">
+        <button onclick="filterTypeFeed('lost')" id="btnFilterLost" class="bg-slate-800 hover:bg-slate-700 text-rose-300 font-bold px-4 py-2.5 rounded-xl shadow-lg border border-slate-700 text-xs uppercase tracking-wide transition">
+          🔍 Lost Requests
+        </button>
+        <button onclick="openModal('reportModal', 'lost')" class="bg-rose-600 hover:bg-rose-500 text-white font-black px-6 py-3 rounded-2xl shadow-xl border border-rose-400/40 text-sm uppercase tracking-wide transition flex items-center gap-1.5">
+          <span>🔍</span> I Lost Something
+        </button>
+        <button onclick="openModal('reportModal', 'found')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-black px-6 py-3 rounded-2xl shadow-xl border border-emerald-400/40 text-sm uppercase tracking-wide transition flex items-center gap-1.5">
+          <span>📦</span> I Found Something
+        </button>
+        <button onclick="filterTypeFeed('found')" id="btnFilterFound" class="bg-slate-800 hover:bg-slate-700 text-emerald-300 font-bold px-4 py-2.5 rounded-xl shadow-lg border border-slate-700 text-xs uppercase tracking-wide transition">
+          📦 Found Requests
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <main class="max-w-7xl mx-auto py-4 px-4 relative">
 
     <!-- AUTH SECTION -->
-    <section id="authSection" class="max-w-md mx-auto bg-white rounded-2xl shadow-xl border p-6 space-y-6">
+    <section id="authSection" class="max-w-md mx-auto bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border p-6 space-y-6">
       <div class="flex border-b text-sm font-bold text-center">
         <button id="btnTabStudent" onclick="authTab('student')" class="w-1/2 py-2 border-b-2 border-indigo-600 text-indigo-600">Student Portal</button>
-        <button id="btnTabCollege" onclick="authTab('college')" class="w-1/2 py-2 text-slate-400">College Admin Registration</button>
+        <button id="btnTabCollege" onclick="authTab('college')" class="w-1/2 py-2 text-slate-400">College Admin Portal</button>
       </div>
 
-      <!-- Student Form -->
-      <form id="formStudent" onsubmit="registerStudent(event)" class="space-y-3">
-        <div>
-          <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Full Name</label>
-          <input type="text" id="sName" required placeholder="Alex Turner" class="w-full px-3 py-2 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-indigo-500" />
+      <div id="studentContainer" class="space-y-4">
+        <div class="flex bg-slate-100 p-1 rounded-xl text-xs font-bold text-center">
+          <button onclick="toggleSubAuth('student', 'reg')" id="sRegTab" class="w-1/2 py-1.5 rounded-lg bg-white shadow-sm text-indigo-600">Register</button>
+          <button onclick="toggleSubAuth('student', 'login')" id="sLogTab" class="w-1/2 py-1.5 text-slate-500">Login</button>
         </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Phone Number</label>
-            <input type="tel" id="sPhone" required placeholder="+1234567890" class="w-full px-3 py-2 border rounded-xl text-sm outline-none" />
-          </div>
-          <div>
-            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Class / Dept</label>
-            <input type="text" id="sClass" required placeholder="CS - Year 3" class="w-full px-3 py-2 border rounded-xl text-sm outline-none" />
-          </div>
-        </div>
-        <div>
-          <label class="block text-xs font-bold uppercase text-slate-600 mb-1">College Email</label>
-          <input type="email" id="sEmail" required placeholder="student@college.edu" class="w-full px-3 py-2 border rounded-xl text-sm outline-none" />
-        </div>
-        <div class="bg-indigo-50 p-3 rounded-xl border border-indigo-100">
-          <label class="block text-xs font-bold uppercase text-indigo-800 mb-1">6-Digit College Code</label>
-          <input type="text" id="sCode" maxlength="6" required placeholder="e.g. 567323" class="w-full px-3 py-2 border font-mono tracking-widest text-center rounded-xl font-bold text-indigo-900 outline-none bg-white" />
-        </div>
-        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl shadow">Login / Register Student</button>
-      </form>
 
-      <!-- College Admin Form -->
-      <form id="formCollege" onsubmit="registerCollege(event)" class="space-y-3 hidden">
-        <div>
-          <label class="block text-xs font-bold uppercase text-slate-600 mb-1">College Name</label>
-          <input type="text" id="cName" required placeholder="State Institute of Tech" class="w-full px-3 py-2 border rounded-xl text-sm outline-none" />
+        <form id="formStudentReg" onsubmit="registerStudent(event)" class="space-y-3">
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Full Student Name</label>
+            <input type="text" id="sName" required placeholder="Alex Turner" class="w-full px-3 py-2 border rounded-xl text-sm outline-none" />
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Phone Number</label>
+              <input type="tel" id="sPhone" required placeholder="+1234567890" class="w-full px-3 py-2 border rounded-xl text-sm outline-none" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Class / Dept</label>
+              <input type="text" id="sClass" required placeholder="CS - Year 3" class="w-full px-3 py-2 border rounded-xl text-sm outline-none" />
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Student College Email</label>
+            <input type="email" id="sEmail" required placeholder="student@college.edu" class="w-full px-3 py-2 border rounded-xl text-sm outline-none" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Account Password</label>
+            <input type="password" id="sPass" required placeholder="••••••••" class="w-full px-3 py-2 border rounded-xl text-sm outline-none" />
+          </div>
+          <div class="bg-indigo-50 p-3 rounded-xl border border-indigo-100">
+            <label class="block text-xs font-bold uppercase text-indigo-800 mb-1">6-Digit College Code</label>
+            <input type="text" id="sCode" maxlength="6" required placeholder="e.g. 567323" class="w-full px-3 py-2 border font-mono tracking-widest text-center rounded-xl font-bold text-indigo-900 outline-none bg-white" />
+          </div>
+          <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl shadow">Register Student</button>
+        </form>
+
+        <form id="formStudentLog" onsubmit="loginStudent(event)" class="space-y-3 hidden">
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Registered Phone Number</label>
+            <input type="tel" id="sLogPhone" required placeholder="+1234567890" class="w-full px-3 py-2 border rounded-xl text-sm outline-none" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Password</label>
+            <input type="password" id="sLogPass" required placeholder="••••••••" class="w-full px-3 py-2 border rounded-xl text-sm outline-none" />
+          </div>
+          <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl shadow">Login to Student Portal</button>
+        </form>
+      </div>
+
+      <div id="collegeContainer" class="space-y-4 hidden">
+        <div class="flex bg-slate-100 p-1 rounded-xl text-xs font-bold text-center">
+          <button onclick="toggleSubAuth('college', 'reg')" id="cRegTab" class="w-1/2 py-1.5 rounded-lg bg-white shadow-sm text-indigo-600">Register College</button>
+          <button onclick="toggleSubAuth('college', 'login')" id="cLogTab" class="w-1/2 py-1.5 text-slate-500">Admin Login</button>
         </div>
-        <div>
-          <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Address / Location</label>
-          <input type="text" id="cAddr" required placeholder="Campus Main Block, City" class="w-full px-3 py-2 border rounded-xl text-sm outline-none" />
-        </div>
-        <div>
-          <label class="block text-xs font-bold uppercase text-slate-600 mb-1">College Email</label>
-          <input type="email" id="cEmail" required placeholder="admin@institute.edu" class="w-full px-3 py-2 border rounded-xl text-sm outline-none" />
-        </div>
-        <div>
-          <label class="block text-xs font-bold uppercase text-slate-600 mb-1">College Center Code</label>
-          <input type="text" id="cCenter" required placeholder="CTR-9921" class="w-full px-3 py-2 border rounded-xl text-sm outline-none" />
-        </div>
-        <button type="submit" class="w-full bg-slate-900 hover:bg-black text-white font-bold py-2.5 rounded-xl shadow">Register College & Generate Code</button>
-      </form>
+
+        <form id="formCollegeReg" onsubmit="registerCollege(event)" class="space-y-3">
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">College Name</label>
+            <input type="text" id="cName" required placeholder="State Institute of Tech" class="w-full px-3 py-2 border rounded-xl text-sm outline-none" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Address / Location</label>
+            <input type="text" id="cAddr" required placeholder="Campus Main Block, City" class="w-full px-3 py-2 border rounded-xl text-sm outline-none" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">College Admin Email</label>
+            <input type="email" id="cEmail" required placeholder="admin@institute.edu" class="w-full px-3 py-2 border rounded-xl text-sm outline-none" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Password</label>
+            <input type="password" id="cPass" required placeholder="••••••••" class="w-full px-3 py-2 border rounded-xl text-sm outline-none" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">College Center Code</label>
+            <input type="text" id="cCenter" required placeholder="CTR-9921" class="w-full px-3 py-2 border rounded-xl text-sm outline-none" />
+          </div>
+          <button type="submit" class="w-full bg-slate-900 hover:bg-black text-white font-bold py-2.5 rounded-xl shadow">Register & Generate Unique Code</button>
+        </form>
+
+        <form id="formCollegeLog" onsubmit="loginCollege(event)" class="space-y-3 hidden">
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">College Email</label>
+            <input type="email" id="cLogEmail" required placeholder="admin@institute.edu" class="w-full px-3 py-2 border rounded-xl text-sm outline-none" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Password</label>
+            <input type="password" id="cLogPass" required placeholder="••••••••" class="w-full px-3 py-2 border rounded-xl text-sm outline-none" />
+          </div>
+          <button type="submit" class="w-full bg-slate-900 hover:bg-black text-white font-bold py-2.5 rounded-xl shadow">Login as College Admin</button>
+        </form>
+      </div>
     </section>
 
     <!-- DASHBOARD SECTION -->
     <section id="appDashboard" class="space-y-6 hidden">
 
-      <!-- FEED VIEW -->
-      <div id="viewFeed" class="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <aside class="space-y-3">
-          <button onclick="openModal('reportModal')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl shadow flex items-center justify-center gap-2">
-            <span>+</span> Report Lost / Found Item
-          </button>
-          <div class="bg-white rounded-2xl border p-3 space-y-1 shadow-sm">
-            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider px-2 py-1">Categories</h3>
-            <button onclick="filterCat('all')" class="w-full text-left px-3 py-2 rounded-xl text-sm font-semibold bg-indigo-50 text-indigo-700">All Items</button>
-            <button onclick="filterCat('documents')" class="w-full text-left px-3 py-2 rounded-xl text-sm text-slate-600 hover:bg-slate-50">📄 Documents</button>
-            <button onclick="filterCat('electronics')" class="w-full text-left px-3 py-2 rounded-xl text-sm text-slate-600 hover:bg-slate-50">💻 Electronics</button>
-            <button onclick="filterCat('jewelry')" class="w-full text-left px-3 py-2 rounded-xl text-sm text-slate-600 hover:bg-slate-50">💍 Jewelry</button>
-            <button onclick="filterCat('accessories')" class="w-full text-left px-3 py-2 rounded-xl text-sm text-slate-600 hover:bg-slate-50">🔑 Accessories & Keys</button>
-            <button onclick="filterCat('cloths')" class="w-full text-left px-3 py-2 rounded-xl text-sm text-slate-600 hover:bg-slate-50">👕 Cloths</button>
+      <!-- MAIN FEED VIEW WITH ADJUSTED FIXED CATEGORIES SIDEBAR -->
+      <div id="viewFeed" class="grid grid-cols-1 md:grid-cols-4 gap-6 items-start relative">
+        
+        <!-- PROFESSIONALLY STYLED & POSITIONED CATEGORIES SIDEBAR (1 cm down & 1 cm left) -->
+        <aside class="hidden md:block md:col-span-1">
+          <div class="fixed left-3 top-[23rem] w-64 bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-950 backdrop-blur-2xl border-2 border-indigo-500/40 rounded-3xl p-5 shadow-2xl shadow-indigo-950/80 z-20 space-y-3">
+            <div class="flex items-center gap-2.5 px-1 pb-2.5 border-b border-indigo-500/30">
+              <span class="text-base">🏷️</span>
+              <h3 class="text-xs font-black text-indigo-300 uppercase tracking-widest">Categories Filter</h3>
+            </div>
+            
+            <div class="space-y-2">
+              <button onclick="filterCat('all')" id="catBtn-all" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-bold bg-indigo-600 text-white shadow-lg shadow-indigo-600/40 flex items-center gap-3 transition">🌐 All Items</button>
+              <button onclick="filterCat('documents')" id="catBtn-documents" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-bold text-slate-200 hover:bg-indigo-900/60 hover:text-white border border-transparent hover:border-indigo-500/40 flex items-center gap-3 transition">📄 Documents & IDs</button>
+              <button onclick="filterCat('electronics')" id="catBtn-electronics" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-bold text-slate-200 hover:bg-indigo-900/60 hover:text-white border border-transparent hover:border-indigo-500/40 flex items-center gap-3 transition">💻 Electronics</button>
+              <button onclick="filterCat('jewelry')" id="catBtn-jewelry" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-bold text-slate-200 hover:bg-indigo-900/60 hover:text-white border border-transparent hover:border-indigo-500/40 flex items-center gap-3 transition">💍 Jewelry & Watches</button>
+              <button onclick="filterCat('accessories')" id="catBtn-accessories" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-bold text-slate-200 hover:bg-indigo-900/60 hover:text-white border border-transparent hover:border-indigo-500/40 flex items-center gap-3 transition">🔑 Keys & Wallets</button>
+              <button onclick="filterCat('cloths')" id="catBtn-cloths" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-bold text-slate-200 hover:bg-indigo-900/60 hover:text-white border border-transparent hover:border-indigo-500/40 flex items-center gap-3 transition">👕 Clothes & Bags</button>
+              <button onclick="filterCat('others')" id="catBtn-others" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-bold text-slate-200 hover:bg-indigo-900/60 hover:text-white border border-transparent hover:border-indigo-500/40 flex items-center gap-3 transition">📦 Other Belongings</button>
+            </div>
           </div>
         </aside>
 
-        <div class="md:col-span-3 space-y-4">
-          <!-- AI Match Banner -->
-          <div id="aiBanner" class="bg-amber-50 border border-amber-200 p-4 rounded-2xl flex items-center justify-between shadow-sm">
+        <!-- SCROLLABLE FEED SECTION -->
+        <div class="md:col-start-2 md:col-span-3 space-y-4">
+          <div id="aiBanner" class="bg-amber-500/15 backdrop-blur-md border border-amber-400/40 p-3.5 rounded-2xl flex items-center justify-between shadow-lg text-white">
             <div class="flex items-center gap-3">
               <span class="text-2xl">🤖</span>
               <div>
-                <h4 class="text-sm font-bold text-amber-950">Foundora AI Matching Engine Active</h4>
-                <p class="text-xs text-amber-800">Scanning campus records live for matching lost & found entries...</p>
+                <h4 class="text-xs font-extrabold text-amber-300 uppercase tracking-wide">Foundora AI Matching Engine Active</h4>
+                <p class="text-[11px] text-slate-200">Scanning campus entries live across classrooms, canteens & parking...</p>
               </div>
             </div>
           </div>
@@ -148,27 +234,46 @@
         </div>
       </div>
 
+      <!-- "I FOUND IT" RECOVERED VIEW -->
+      <div id="viewFoundIt" class="space-y-4 hidden">
+        <div class="bg-white/95 backdrop-blur-md p-6 rounded-2xl border shadow-xl flex justify-between items-center">
+          <div>
+            <h2 class="text-xl font-black text-emerald-900">✔️ "I Found It" - Completed Lost Recoveries</h2>
+            <p class="text-xs text-slate-500">All lost requests on campus that were successfully found and returned.</p>
+          </div>
+        </div>
+        <div id="foundItList" class="space-y-4"></div>
+      </div>
+
+      <!-- "I GAVE IT" HANDED OVER VIEW -->
+      <div id="viewGaveIt" class="space-y-4 hidden">
+        <div class="bg-white/95 backdrop-blur-md p-6 rounded-2xl border shadow-xl flex justify-between items-center">
+          <div>
+            <h2 class="text-xl font-black text-amber-900">🤝 "I Gave It" - Handed Over Items</h2>
+            <p class="text-xs text-slate-500">Found items that were handed back to their rightful owners.</p>
+          </div>
+        </div>
+        <div id="gaveItList" class="space-y-4"></div>
+      </div>
+
       <!-- CAMPUS VAULT VIEW -->
       <div id="viewVault" class="space-y-4 hidden">
-        <div class="bg-white p-6 rounded-2xl border shadow-sm flex justify-between items-center">
+        <div class="bg-white/95 backdrop-blur-md p-6 rounded-2xl border shadow-xl flex justify-between items-center">
           <div>
-            <h2 class="text-lg font-bold text-slate-900">🏛️ Campus Vault (Official Office Section)</h2>
-            <p class="text-xs text-slate-500">Items submitted directly to the college administration office.</p>
+            <h2 class="text-xl font-black text-slate-900">🏛️ Campus Vault (Official Security Office)</h2>
+            <p class="text-xs text-slate-500">All items reported as "Found" on campus are held safely in the security office vault.</p>
           </div>
-          <button onclick="openModal('vaultModal')" class="bg-amber-600 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow">
-            + Log Vault Item (Admin Only)
-          </button>
         </div>
         <div id="vaultList" class="space-y-3"></div>
       </div>
 
       <!-- PROFILE VIEW -->
       <div id="viewProfile" class="space-y-4 max-w-2xl mx-auto hidden">
-        <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-6">
-          <h2 class="text-lg font-bold text-slate-900">👤 Student & College Profile</h2>
+        <div class="bg-white/95 backdrop-blur-md p-6 rounded-2xl border shadow-xl space-y-6">
+          <h2 class="text-xl font-black text-slate-900">👤 Student & Campus Identity Profile</h2>
           
           <div class="space-y-3">
-            <h3 class="text-xs font-bold uppercase text-indigo-600 tracking-wider">Student Information</h3>
+            <h3 class="text-xs font-bold uppercase text-indigo-600 tracking-wider">Student Details</h3>
             <div class="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl border text-xs">
               <div><span class="text-slate-400 block">Full Name</span><strong id="profName" class="text-sm text-slate-900"></strong></div>
               <div><span class="text-slate-400 block">Class / Dept</span><strong id="profClass" class="text-sm text-slate-900"></strong></div>
@@ -178,36 +283,36 @@
           </div>
 
           <div class="space-y-3">
-            <h3 class="text-xs font-bold uppercase text-indigo-600 tracking-wider">College & Network Details</h3>
+            <h3 class="text-xs font-bold uppercase text-indigo-600 tracking-wider">College & Network Info</h3>
             <div class="grid grid-cols-2 gap-4 bg-indigo-50/50 p-4 rounded-xl border border-indigo-100 text-xs">
               <div><span class="text-slate-400 block">College Name</span><strong id="profColName" class="text-sm text-indigo-950"></strong></div>
               <div><span class="text-slate-400 block">Website College Code</span><strong id="profColCode" class="text-sm font-mono text-indigo-950"></strong></div>
-              <div><span class="text-slate-400 block">College Center Code</span><strong id="profColCenter" class="text-indigo-950"></strong></div>
+              <div><span class="text-slate-400 block">Center Code</span><strong id="profColCenter" class="text-indigo-950"></strong></div>
               <div><span class="text-slate-400 block">College Email</span><strong id="profColEmail" class="text-indigo-950"></strong></div>
-              <div class="col-span-2"><span class="text-slate-400 block">College Address</span><strong id="profColAddr" class="text-indigo-950"></strong></div>
+              <div class="col-span-2"><span class="text-slate-400 block">Address</span><strong id="profColAddr" class="text-indigo-950"></strong></div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- HISTORY & STATS VIEW -->
+      <!-- HISTORY VIEW -->
       <div id="viewHistory" class="space-y-4 hidden">
-        <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-4">
+        <div class="bg-white/95 backdrop-blur-md p-6 rounded-2xl border shadow-xl space-y-4">
           <div class="flex justify-between items-center">
-            <h2 class="text-lg font-bold">📜 History Statement & Metrics</h2>
+            <h2 class="text-xl font-black text-slate-900">📜 Campus History & Metrics</h2>
           </div>
           <div class="grid grid-cols-3 gap-4">
             <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-100 text-center">
-              <span class="text-xs text-indigo-600 font-bold uppercase">Total Lost</span>
-              <h3 id="statLost" class="text-2xl font-black text-indigo-900">0</h3>
+              <span class="text-xs text-indigo-600 font-bold uppercase">Total Reported Lost</span>
+              <h3 id="statLost" class="text-3xl font-black text-indigo-900">0</h3>
             </div>
             <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-100 text-center">
-              <span class="text-xs text-emerald-600 font-bold uppercase">Total Found</span>
-              <h3 id="statFound" class="text-2xl font-black text-emerald-900">0</h3>
+              <span class="text-xs text-emerald-600 font-bold uppercase">Total Reported Found</span>
+              <h3 id="statFound" class="text-3xl font-black text-emerald-900">0</h3>
             </div>
             <div class="bg-amber-50 p-4 rounded-xl border border-amber-100 text-center">
-              <span class="text-xs text-amber-600 font-bold uppercase">Recovered Rate</span>
-              <h3 id="statRate" class="text-2xl font-black text-amber-900">88%</h3>
+              <span class="text-xs text-amber-600 font-bold uppercase">Recovery Success Rate</span>
+              <h3 id="statRate" class="text-3xl font-black text-amber-900">100%</h3>
             </div>
           </div>
         </div>
@@ -215,12 +320,25 @@
       </div>
 
       <!-- NOTIFICATIONS VIEW -->
-      <div id="viewNotifications" class="space-y-4 hidden max-w-2xl mx-auto">
-        <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-4">
-          <h2 class="text-lg font-bold">🔔 Notification Center</h2>
+      <div id="viewNotifications" class="space-y-4 max-w-2xl mx-auto hidden">
+        <div class="bg-white/95 backdrop-blur-md p-6 rounded-2xl border shadow-xl space-y-6">
+          <h2 class="text-xl font-black text-slate-900">🔔 Notification & Preference Center</h2>
+
+          <div class="bg-slate-50 p-4 rounded-xl border space-y-3">
+            <h3 class="text-xs font-bold text-slate-600 uppercase tracking-wider">Alert Controls</h3>
+            <div class="flex items-center justify-between text-xs">
+              <span>Public Campus Item Request Notifications</span>
+              <input type="checkbox" id="notifPublic" checked class="w-4 h-4 accent-indigo-600" />
+            </div>
+            <div class="flex items-center justify-between text-xs">
+              <span>Private Chat Message Notifications</span>
+              <input type="checkbox" id="notifPrivate" checked class="w-4 h-4 accent-indigo-600" />
+            </div>
+          </div>
+
           <div id="notifList" class="space-y-2">
             <div class="bg-slate-50 p-3 rounded-xl border text-xs flex justify-between">
-              <span>Welcome to Foundora Campus System</span>
+              <span>Welcome to Foundora Campus Notification Engine</span>
               <span class="text-slate-400">System</span>
             </div>
           </div>
@@ -229,11 +347,11 @@
 
       <!-- SETTINGS VIEW -->
       <div id="viewSettings" class="space-y-4 max-w-lg mx-auto hidden">
-        <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-4">
-          <h2 class="text-lg font-bold">⚙️ Account & College Settings</h2>
+        <div class="bg-white/95 backdrop-blur-md p-6 rounded-2xl border shadow-xl space-y-4">
+          <h2 class="text-xl font-black text-slate-900">⚙️ College Network Settings</h2>
           <div class="space-y-3 text-sm">
             <div>
-              <label class="block text-xs font-bold text-slate-500 uppercase">College Code</label>
+              <label class="block text-xs font-bold text-slate-500 uppercase">Active College Network Code</label>
               <input type="text" id="settingCode" readonly class="px-3 py-2 border rounded-xl w-full font-mono font-bold bg-slate-50 mt-1" />
             </div>
           </div>
@@ -244,55 +362,98 @@
   </main>
 
   <!-- REPORT MODAL -->
-  <div id="reportModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
-    <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
+  <div id="reportModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-md hidden flex items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl border">
       <div class="flex justify-between items-center">
-        <h3 class="text-lg font-bold">Report Lost or Found Item</h3>
-        <button onclick="closeModal('reportModal')" class="text-slate-400 font-bold">✕</button>
+        <h3 id="modalTitle" class="text-xl font-black text-slate-900">Publish Campus Request</h3>
+        <button onclick="closeModal('reportModal')" class="text-slate-400 font-bold text-lg">✕</button>
       </div>
       <form onsubmit="submitItem(event)" class="space-y-3">
-        <div class="grid grid-cols-2 gap-2">
-          <select id="rType" class="px-3 py-2 border rounded-xl text-sm font-semibold">
-            <option value="lost">Lost Request</option>
-            <option value="found">Found Request</option>
-          </select>
-          <select id="rCat" class="px-3 py-2 border rounded-xl text-sm font-semibold">
-            <option value="documents">Documents</option>
-            <option value="electronics">Electronics</option>
-            <option value="jewelry">Jewelry</option>
-            <option value="accessories">Accessories / Keys</option>
-            <option value="cloths">Cloths</option>
+        <input type="hidden" id="rType" value="lost" />
+        <div class="grid grid-cols-1 gap-2">
+          <label class="block text-xs font-bold text-slate-600 uppercase">Category</label>
+          <select id="rCat" class="px-3 py-2 border rounded-xl text-sm font-semibold outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="documents">Documents & IDs</option>
+            <option value="electronics">Electronics & Laptops</option>
+            <option value="jewelry">Jewelry & Watches</option>
+            <option value="accessories">Keys & Wallets</option>
+            <option value="cloths">Clothes & Bags</option>
+            <option value="others">Other Belongings</option>
           </select>
         </div>
-        <input type="text" id="rTitle" placeholder="Title (e.g., Black Fastrack Watch)" required class="w-full px-3 py-2 border rounded-xl text-sm outline-none" />
-        <textarea id="rDesc" placeholder="Detailed Description..." required class="w-full px-3 py-2 border rounded-xl text-sm outline-none h-20"></textarea>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Title (Main Topic)</label>
+          <input type="text" id="rTitle" placeholder="e.g. Lost Bike Keys with Red Keychain" required class="w-full px-3 py-2 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-indigo-500" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Detailed Description</label>
+          <textarea id="rDesc" placeholder="e.g. Lost near Canteen Parking ground near CS block around 2 PM..." required class="w-full px-3 py-2 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-indigo-500 h-20"></textarea>
+        </div>
         <div class="grid grid-cols-2 gap-2">
-          <input type="text" id="rLoc" placeholder="Location" required class="w-full px-3 py-2 border rounded-xl text-sm" />
-          <input type="date" id="rDate" required class="w-full px-3 py-2 border rounded-xl text-sm" />
+          <div>
+            <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Campus Location</label>
+            <input type="text" id="rLoc" placeholder="e.g. Parking Ground B" required class="w-full px-3 py-2 border rounded-xl text-sm" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Date</label>
+            <input type="date" id="rDate" required class="w-full px-3 py-2 border rounded-xl text-sm" />
+          </div>
         </div>
         <div class="border p-3 rounded-xl bg-slate-50 space-y-2">
-          <label class="block text-xs font-bold text-slate-600">Anti-Fraud Security Blur</label>
+          <label class="block text-xs font-bold text-slate-600">Item Picture Upload (Optional - Only shown if uploaded)</label>
           <input type="file" id="rImgFile" accept="image/*" class="text-xs w-full" />
-          <label class="flex items-center gap-2 text-xs text-slate-600">
-            <input type="checkbox" id="rBlur" checked /> Blur identifying details (Name on ID, etc.)
-          </label>
         </div>
-        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl">Publish Live to Campus</button>
+        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold py-3 rounded-xl shadow-lg uppercase text-xs tracking-wider">Publish Request Live</button>
       </form>
     </div>
   </div>
 
-  <!-- VAULT MODAL -->
-  <div id="vaultModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
-      <div class="flex justify-between items-center">
-        <h3 class="text-lg font-bold">Log Office Vault Item</h3>
-        <button onclick="closeModal('vaultModal')" class="text-slate-400 font-bold">✕</button>
+  <!-- FULL DETAILS & IMAGE VIEW MODAL ("VIEW ALL") -->
+  <div id="fullDetailsModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-md hidden flex items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl border">
+      <div class="flex justify-between items-center border-b pb-3">
+        <div>
+          <span id="modalDetailType" class="text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase"></span>
+          <h3 id="modalDetailTitle" class="text-xl font-black text-slate-900 mt-1"></h3>
+        </div>
+        <button onclick="closeModal('fullDetailsModal')" class="text-slate-400 font-bold text-lg">✕</button>
       </div>
-      <form onsubmit="submitVaultItem(event)" class="space-y-3">
-        <input type="text" id="vTitle" placeholder="Item Name" required class="w-full px-3 py-2 border rounded-xl text-sm" />
-        <textarea id="vDesc" placeholder="Office Reference & Storage Drawer" required class="w-full px-3 py-2 border rounded-xl text-sm h-20"></textarea>
-        <button type="submit" class="w-full bg-amber-600 text-white font-bold py-2.5 rounded-xl">Add to Campus Vault</button>
+      <div class="space-y-3 text-xs">
+        <p class="font-bold text-indigo-600" id="modalDetailLocDate"></p>
+        <div class="bg-slate-50 p-3 rounded-xl border">
+          <p class="font-bold text-slate-700 uppercase text-[10px] mb-1">Full Detailed Description:</p>
+          <p id="modalDetailDesc" class="text-sm text-slate-900 font-medium leading-relaxed"></p>
+        </div>
+        <div id="modalDetailImageContainer" class="hidden text-center bg-slate-100 p-2 rounded-xl border">
+          <p class="font-bold text-slate-700 uppercase text-[10px] mb-1">Attached Product Picture:</p>
+          <img id="modalDetailImg" class="max-h-60 mx-auto object-contain rounded-lg shadow" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRIVATE CHAT MODAL -->
+  <div id="privateChatModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-md hidden flex items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl border flex flex-col h-[520px]">
+      <div class="flex justify-between items-center border-b pb-3">
+        <div>
+          <h3 id="chatPartnerName" class="text-lg font-black text-slate-900">Private Peer Chat</h3>
+          <p id="chatItemTitle" class="text-xs text-indigo-600 font-bold"></p>
+        </div>
+        <button onclick="closeModal('privateChatModal')" class="text-slate-400 font-bold text-lg">✕</button>
+      </div>
+
+      <div id="privateContactBox" class="bg-indigo-50 border border-indigo-100 p-3 rounded-xl text-xs space-y-1">
+        <p class="font-extrabold text-indigo-900">🔒 Identity & Contact Handshake Status:</p>
+        <p id="privateContactDetails" class="text-slate-700">Personal phone and email details are hidden until the owner confirms ownership handshake.</p>
+        <button id="btnClaimUnlock" onclick="triggerHandshakeClaim()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-3 py-1.5 rounded-lg text-[11px] mt-1 shadow hidden">🤝 Confirm Claim & Reveal Contact Details</button>
+      </div>
+
+      <div id="privateChatMessages" class="flex-1 overflow-y-auto space-y-2 p-2 bg-slate-50 rounded-xl border text-xs"></div>
+
+      <form onsubmit="sendPrivateMessage(event)" class="flex gap-2">
+        <input type="text" id="privateChatInput" placeholder="Type private message..." required class="flex-1 px-3 py-2 border rounded-xl text-xs outline-none" />
+        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2 rounded-xl text-xs">Send</button>
       </form>
     </div>
   </div>
@@ -301,54 +462,153 @@
   <script>
     let currentUser = JSON.parse(localStorage.getItem('f_user') || 'null');
     let currentCat = 'all';
+    let currentTypeFilter = 'all';
+    let activePrivateDocId = null;
 
     function authTab(tab) {
       if (tab === 'student') {
-        document.getElementById('formStudent').classList.remove('hidden');
-        document.getElementById('formCollege').classList.add('hidden');
+        document.getElementById('studentContainer').classList.remove('hidden');
+        document.getElementById('collegeContainer').classList.add('hidden');
         document.getElementById('btnTabStudent').className = "w-1/2 py-2 border-b-2 border-indigo-600 text-indigo-600 font-bold";
         document.getElementById('btnTabCollege').className = "w-1/2 py-2 text-slate-400 font-bold";
       } else {
-        document.getElementById('formCollege').classList.remove('hidden');
-        document.getElementById('formStudent').classList.add('hidden');
+        document.getElementById('collegeContainer').classList.remove('hidden');
+        document.getElementById('studentContainer').classList.add('hidden');
         document.getElementById('btnTabCollege').className = "w-1/2 py-2 border-b-2 border-indigo-600 text-indigo-600 font-bold";
         document.getElementById('btnTabStudent').className = "w-1/2 py-2 text-slate-400 font-bold";
       }
     }
 
+    function toggleSubAuth(role, mode) {
+      if (role === 'student') {
+        if (mode === 'reg') {
+          document.getElementById('formStudentReg').classList.remove('hidden');
+          document.getElementById('formStudentLog').classList.add('hidden');
+          document.getElementById('sRegTab').className = "w-1/2 py-1.5 rounded-lg bg-white shadow-sm text-indigo-600 font-bold";
+          document.getElementById('sLogTab').className = "w-1/2 py-1.5 text-slate-500 font-medium";
+        } else {
+          document.getElementById('formStudentReg').classList.add('hidden');
+          document.getElementById('formStudentLog').classList.remove('hidden');
+          document.getElementById('sLogTab').className = "w-1/2 py-1.5 rounded-lg bg-white shadow-sm text-indigo-600 font-bold";
+          document.getElementById('sRegTab').className = "w-1/2 py-1.5 text-slate-500 font-medium";
+        }
+      } else {
+        if (mode === 'reg') {
+          document.getElementById('formCollegeReg').classList.remove('hidden');
+          document.getElementById('formCollegeLog').classList.add('hidden');
+          document.getElementById('cRegTab').className = "w-1/2 py-1.5 rounded-lg bg-white shadow-sm text-indigo-600 font-bold";
+          document.getElementById('cLogTab').className = "w-1/2 py-1.5 text-slate-500 font-medium";
+        } else {
+          document.getElementById('formCollegeReg').classList.add('hidden');
+          document.getElementById('formCollegeLog').classList.remove('hidden');
+          document.getElementById('cLogTab').className = "w-1/2 py-1.5 rounded-lg bg-white shadow-sm text-indigo-600 font-bold";
+          document.getElementById('cRegTab').className = "w-1/2 py-1.5 text-slate-500 font-medium";
+        }
+      }
+    }
+
     async function registerCollege(e) {
       e.preventDefault();
+      const email = document.getElementById('cEmail').value;
+      const q = window.fs.query(window.fs.collection(window.db, "colleges"), window.fs.where("email", "==", email));
+      const snap = await window.fs.getDocs(q);
+
+      if (!snap.empty) {
+        alert("A college with this email already exists!");
+        toggleSubAuth('college', 'login');
+        return;
+      }
+
       const code = Math.floor(100000 + Math.random() * 900000).toString();
       await window.fs.addDoc(window.fs.collection(window.db, "colleges"), {
         code,
         name: document.getElementById('cName').value,
         address: document.getElementById('cAddr').value,
-        email: document.getElementById('cEmail').value,
+        email: email,
+        password: document.getElementById('cPass').value,
         centerCode: document.getElementById('cCenter').value
       });
-      alert(`College Registered!\n\nYour Unique Website College Code is: ${code}`);
-      authTab('student');
-      document.getElementById('sCode').value = code;
+      alert(`College Registered Successfully!\n\nYour Unique College Code is: ${code}`);
+      toggleSubAuth('college', 'login');
+    }
+
+    async function loginCollege(e) {
+      e.preventDefault();
+      const email = document.getElementById('cLogEmail').value;
+      const pass = document.getElementById('cLogPass').value;
+
+      const q = window.fs.query(window.fs.collection(window.db, "colleges"), window.fs.where("email", "==", email), window.fs.where("password", "==", pass));
+      const snap = await window.fs.getDocs(q);
+
+      if (snap.empty) {
+        alert("Invalid College Email or Password!");
+        return;
+      }
+
+      const colData = snap.docs[0].data();
+      currentUser = {
+        name: colData.name + " (Admin)",
+        phone: "Admin Desk",
+        email: colData.email,
+        class: "College Administration",
+        code: colData.code,
+        isAdmin: true
+      };
+      localStorage.setItem('f_user', JSON.stringify(currentUser));
+      initApp();
     }
 
     async function registerStudent(e) {
       e.preventDefault();
       const code = document.getElementById('sCode').value;
-      const q = window.fs.query(window.fs.collection(window.db, "colleges"), window.fs.where("code", "==", code));
-      const snap = await window.fs.getDocs(q);
+      const phone = document.getElementById('sPhone').value;
+      
+      const qCol = window.fs.query(window.fs.collection(window.db, "colleges"), window.fs.where("code", "==", code));
+      const snapCol = await window.fs.getDocs(qCol);
 
-      if (snap.empty) {
-        alert("Invalid College Code! Please register your college first or enter a valid code.");
+      if (snapCol.empty) {
+        alert("Invalid College Code! Please enter a valid 6-digit college code.");
         return;
       }
 
-      currentUser = {
+      const qStudent = window.fs.query(window.fs.collection(window.db, "students"), window.fs.where("phone", "==", phone));
+      const snapStudent = await window.fs.getDocs(qStudent);
+
+      if (!snapStudent.empty) {
+        alert("An account with this phone number exists! Switching to login tab.");
+        toggleSubAuth('student', 'login');
+        return;
+      }
+
+      const studentData = {
         name: document.getElementById('sName').value,
-        phone: document.getElementById('sPhone').value,
+        phone: phone,
         email: document.getElementById('sEmail').value,
         class: document.getElementById('sClass').value,
-        code
+        password: document.getElementById('sPass').value,
+        code: code
       };
+
+      await window.fs.addDoc(window.fs.collection(window.db, "students"), studentData);
+      currentUser = studentData;
+      localStorage.setItem('f_user', JSON.stringify(currentUser));
+      initApp();
+    }
+
+    async function loginStudent(e) {
+      e.preventDefault();
+      const phone = document.getElementById('sLogPhone').value;
+      const pass = document.getElementById('sLogPass').value;
+
+      const q = window.fs.query(window.fs.collection(window.db, "students"), window.fs.where("phone", "==", phone), window.fs.where("password", "==", pass));
+      const snap = await window.fs.getDocs(q);
+
+      if (snap.empty) {
+        alert("Invalid Phone Number or Password!");
+        return;
+      }
+
+      currentUser = snap.docs[0].data();
       localStorage.setItem('f_user', JSON.stringify(currentUser));
       initApp();
     }
@@ -375,21 +635,60 @@
     }
 
     function switchTab(tab) {
-      ['viewFeed', 'viewVault', 'viewProfile', 'viewHistory', 'viewNotifications', 'viewSettings'].forEach(v => {
+      ['viewFeed', 'viewFoundIt', 'viewGaveIt', 'viewVault', 'viewProfile', 'viewHistory', 'viewNotifications', 'viewSettings'].forEach(v => {
         document.getElementById(v).classList.add('hidden');
       });
       document.getElementById('view' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.remove('hidden');
       if (tab === 'feed') listenLiveFeed();
+      if (tab === 'foundIt') listenLiveSpecialFeed('foundIt');
+      if (tab === 'gaveIt') listenLiveSpecialFeed('gaveIt');
       if (tab === 'vault') listenLiveVault();
       if (tab === 'profile') renderProfile();
       if (tab === 'history') listenLiveFeed();
     }
 
-    function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+    function openModal(id, mode) { 
+      document.getElementById(id).classList.remove('hidden'); 
+      if(id === 'reportModal' && mode) {
+        document.getElementById('rType').value = mode;
+        document.getElementById('modalTitle').innerText = mode === 'lost' ? 'Report Lost Request' : 'Report Found Request';
+      }
+    }
     function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
     function filterCat(cat) {
       currentCat = cat;
+      ['all', 'documents', 'electronics', 'jewelry', 'accessories', 'cloths', 'others'].forEach(c => {
+        const btn = document.getElementById('catBtn-' + c);
+        if (btn) {
+          btn.className = (c === cat)
+            ? "w-full text-left px-4 py-3 rounded-2xl text-sm font-bold bg-indigo-600 text-white shadow-lg shadow-indigo-600/40 flex items-center gap-3 transition"
+            : "w-full text-left px-4 py-3 rounded-2xl text-sm font-bold text-slate-200 hover:bg-indigo-900/60 hover:text-white border border-transparent hover:border-indigo-500/40 flex items-center gap-3 transition";
+        }
+      });
+      listenLiveFeed();
+    }
+
+    function filterTypeFeed(type) {
+      if (currentTypeFilter === type) {
+        currentTypeFilter = 'all';
+      } else {
+        currentTypeFilter = type;
+      }
+      const btnLost = document.getElementById('btnFilterLost');
+      const btnFound = document.getElementById('btnFilterFound');
+      
+      if(currentTypeFilter === 'lost') {
+        btnLost.className = "bg-rose-600 text-white font-bold px-4 py-2.5 rounded-xl shadow-lg border border-rose-500 text-xs uppercase tracking-wide transition";
+        btnFound.className = "bg-slate-800 hover:bg-slate-700 text-emerald-300 font-bold px-4 py-2.5 rounded-xl shadow-lg border border-slate-700 text-xs uppercase tracking-wide transition";
+      } else if(currentTypeFilter === 'found') {
+        btnFound.className = "bg-emerald-600 text-white font-bold px-4 py-2.5 rounded-xl shadow-lg border border-emerald-500 text-xs uppercase tracking-wide transition";
+        btnLost.className = "bg-slate-800 hover:bg-slate-700 text-rose-300 font-bold px-4 py-2.5 rounded-xl shadow-lg border border-slate-700 text-xs uppercase tracking-wide transition";
+      } else {
+        btnLost.className = "bg-slate-800 hover:bg-slate-700 text-rose-300 font-bold px-4 py-2.5 rounded-xl shadow-lg border border-slate-700 text-xs uppercase tracking-wide transition";
+        btnFound.className = "bg-slate-800 hover:bg-slate-700 text-emerald-300 font-bold px-4 py-2.5 rounded-xl shadow-lg border border-slate-700 text-xs uppercase tracking-wide transition";
+      }
+      switchTab('feed');
       listenLiveFeed();
     }
 
@@ -404,18 +703,20 @@
           userName: currentUser.name,
           userPhone: currentUser.phone,
           userClass: currentUser.class,
+          userEmail: currentUser.email,
           type: document.getElementById('rType').value,
           category: document.getElementById('rCat').value,
           title: document.getElementById('rTitle').value,
           desc: document.getElementById('rDesc').value,
           location: document.getElementById('rLoc').value,
           date: document.getElementById('rDate').value || new Date().toLocaleDateString(),
-          imageUrl: imgUrl || "https://images.unsplash.com/photo-1582139329536-e7284fece509?auto=format&fit=crop&w=600&q=80",
-          isBlurred: document.getElementById('rBlur').checked,
-          handshakeUnlocked: false
+          imageUrl: imgUrl || null,
+          isCompleted: false,
+          publicComments: [],
+          privateChats: {}
         });
         closeModal('reportModal');
-        alert("Item published live to your campus network!");
+        alert("Request published live to your campus network!");
       };
 
       if (file) {
@@ -424,17 +725,6 @@
       } else {
         processSave(null);
       }
-    }
-
-    async function submitVaultItem(e) {
-      e.preventDefault();
-      await window.fs.addDoc(window.fs.collection(window.db, "vault"), {
-        code: currentUser.code,
-        title: document.getElementById('vTitle').value,
-        desc: document.getElementById('vDesc').value,
-        status: 'In Office'
-      });
-      closeModal('vaultModal');
     }
 
     function listenLiveFeed() {
@@ -449,7 +739,7 @@
         let foundCount = 0;
 
         if (snapshot.empty) {
-          feedList.innerHTML = `<div class="bg-white p-8 rounded-2xl text-center text-slate-400 border">No active items reported for your campus yet.</div>`;
+          feedList.innerHTML = `<div class="bg-white/95 backdrop-blur-md p-6 rounded-2xl text-center text-slate-500 border shadow-lg font-bold text-xs">No active requests for your college network.</div>`;
           return;
         }
 
@@ -461,39 +751,72 @@
           if (item.type === 'found') foundCount++;
 
           if (currentCat !== 'all' && item.category !== currentCat) return;
+          if (currentTypeFilter !== 'all' && item.type !== currentTypeFilter) return;
+
+          const isOwner = item.userName === currentUser.name;
+          const hasImage = item.imageUrl && item.imageUrl.trim() !== "";
+          const shortDesc = item.desc.length > 90 ? item.desc.substring(0, 90) + "..." : item.desc;
 
           feedList.innerHTML += `
-            <div class="bg-white rounded-2xl border p-5 space-y-3 shadow-sm">
-              <div class="flex justify-between items-start">
-                <div>
-                  <span class="text-[10px] font-bold px-2.5 py-1 rounded uppercase ${item.type === 'lost' ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">${item.type}</span>
-                  <h3 class="text-base font-bold text-slate-900 mt-1">${item.title}</h3>
-                  <p class="text-xs text-slate-400">Location: ${item.location} • Date: ${item.date}</p>
-                </div>
-              </div>
-              <p class="text-xs text-slate-600">${item.desc}</p>
-              ${item.imageUrl ? `
-                <div class="relative h-44 bg-slate-100 rounded-xl overflow-hidden border">
-                  <img src="${item.imageUrl}" class="w-full h-full object-cover ${item.isBlurred ? 'blur-md' : ''}" />
-                  ${item.isBlurred ? `<span class="absolute inset-0 flex items-center justify-center bg-black/40 text-white text-xs font-bold">🔒 Anti-Fraud Security Blur</span>` : ''}
+            <div class="bg-white/95 backdrop-blur-md rounded-2xl border p-4 space-y-2.5 shadow-xl relative">
+              
+              ${item.isCompleted ? `
+                <div class="bg-emerald-500 text-white font-black text-center py-1 rounded-xl text-xs tracking-wider shadow-md flex items-center justify-center gap-1.5">
+                  <span>✔️</span> COMPLETED / RECOVERED
                 </div>
               ` : ''}
-              
-              ${item.handshakeUnlocked || item.userName === currentUser.name ? `
-                <div class="bg-indigo-50 p-3 rounded-xl border border-indigo-100 text-xs text-indigo-900 space-y-1">
-                  <p class="font-bold">👤 Private Handshake Contact Unlocked:</p>
-                  <p>Name: ${item.userName} | Class: ${item.userClass} | Phone: <strong>${item.userPhone}</strong></p>
+
+              <div class="flex justify-between items-start gap-4">
+                <div>
+                  <span class="text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase ${item.type === 'lost' ? 'bg-rose-100 text-rose-700 border border-rose-200' : 'bg-emerald-100 text-emerald-700 border border-emerald-200'}">${item.type.toUpperCase()} REQUEST</span>
+                  <h3 class="text-xl font-black text-slate-900 mt-1 tracking-tight">${item.title}</h3>
+                  <p class="text-xs font-bold text-indigo-600 mt-0.5">📍 ${item.location} • 📅 Date: ${item.date}</p>
                 </div>
-              ` : `
-                <button onclick="unlockHandshake('${docId}')" class="bg-indigo-600 text-white text-xs px-3.5 py-2 rounded-xl font-bold">Reply / Claim & Unlock Contact</button>
-              `}
+              </div>
+
+              <!-- SHORTENED DESCRIPTION TEXT -->
+              <p class="text-xs text-slate-800 bg-slate-50 p-2.5 rounded-xl border leading-relaxed font-medium">${shortDesc}</p>
+
+              <!-- ACTION BUTTONS: VIEW PRODUCT PICTURE (IF UPLOADED) BESIDE PRIVATE CHAT -->
+              <div class="flex flex-wrap items-center justify-between gap-2 border-t pt-2">
+                <div class="flex items-center gap-2">
+                  ${!isOwner && !item.isCompleted ? `
+                    <button onclick="openPrivateChat('${docId}', '${item.userName}', '${item.title}')" class="bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-black px-3.5 py-2 rounded-xl shadow uppercase flex items-center gap-1.5">
+                      <span>💬</span> I Found / Claim It (Private Chat)
+                    </button>
+                  ` : ''}
+
+                  <!-- VIEW PRODUCT PICTURES BUTTON -->
+                  ${hasImage ? `
+                    <button onclick="openProductImageView('${item.imageUrl}', '${item.title}')" class="bg-amber-600 hover:bg-amber-700 text-white text-[11px] font-black px-3.5 py-2 rounded-xl shadow uppercase flex items-center gap-1.5">
+                      <span>🖼️</span> View Product Pictures
+                    </button>
+                  ` : `
+                    <span class="text-[11px] font-bold text-slate-400 italic px-2">No Images Uploaded</span>
+                  `}
+                </div>
+
+                <!-- VIEW ALL (FULL DETAILS) CLICKABLE BUTTON -->
+                <button onclick="openFullDetails('${encodeURIComponent(JSON.stringify(item))}')" class="text-indigo-600 hover:text-indigo-800 text-xs font-black underline">
+                  📄 View All (Full Details)
+                </button>
+              </div>
+
+              ${isOwner && !item.isCompleted ? `
+                <div class="pt-1">
+                  <button onclick="markCompleted('${docId}')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-black px-3 py-1.5 rounded-lg shadow uppercase">
+                    ✔️ Mark as "I Found / Recovered It"
+                  </button>
+                </div>
+              ` : ''}
+
             </div>
           `;
 
           historyList.innerHTML += `
-            <div class="bg-white p-3 rounded-xl border flex justify-between text-xs">
-              <span><strong>${item.title}</strong> (${item.type.toUpperCase()})</span>
-              <span class="text-slate-400">${item.date}</span>
+            <div class="bg-white/95 p-3 rounded-xl border flex justify-between text-xs shadow-sm font-bold">
+              <span>${item.title} (${item.type.toUpperCase()})</span>
+              <span class="text-slate-500">${item.date}</span>
             </div>
           `;
         });
@@ -503,29 +826,163 @@
       });
     }
 
-    async function unlockHandshake(docId) {
+    function openProductImageView(imgUrl, title) {
+      document.getElementById('modalDetailType').className = "text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase bg-indigo-100 text-indigo-700 border border-indigo-200";
+      document.getElementById('modalDetailType').innerText = "PRODUCT PICTURE";
+      document.getElementById('modalDetailTitle').innerText = title;
+      document.getElementById('modalDetailLocDate').innerText = "";
+      document.getElementById('modalDetailDesc').innerText = "Attached product image preview below:";
+      
+      const imgContainer = document.getElementById('modalDetailImageContainer');
+      imgContainer.classList.remove('hidden');
+      document.getElementById('modalDetailImg').src = imgUrl;
+
+      openModal('fullDetailsModal');
+    }
+
+    function openFullDetails(itemJsonStr) {
+      const item = JSON.parse(decodeURIComponent(itemJsonStr));
+      const typeSpan = document.getElementById('modalDetailType');
+      typeSpan.className = `text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase ${item.type === 'lost' ? 'bg-rose-100 text-rose-700 border border-rose-200' : 'bg-emerald-100 text-emerald-700 border border-emerald-200'}`;
+      typeSpan.innerText = `${item.type.toUpperCase()} REQUEST`;
+
+      document.getElementById('modalDetailTitle').innerText = item.title;
+      document.getElementById('modalDetailLocDate').innerText = `📍 Location: ${item.location} • 📅 Date: ${item.date} • 👤 Posted By: ${item.userName}`;
+      document.getElementById('modalDetailDesc').innerText = item.desc;
+
+      const imgContainer = document.getElementById('modalDetailImageContainer');
+      if (item.imageUrl && item.imageUrl.trim() !== "") {
+        imgContainer.classList.remove('hidden');
+        document.getElementById('modalDetailImg').src = item.imageUrl;
+      } else {
+        imgContainer.classList.add('hidden');
+      }
+
+      openModal('fullDetailsModal');
+    }
+
+    function listenLiveSpecialFeed(mode) {
+      const q = window.fs.query(window.fs.collection(window.db, "items"), window.fs.where("code", "==", currentUser.code), window.fs.where("isCompleted", "==", true));
+      window.fs.onSnapshot(q, (snapshot) => {
+        const targetList = document.getElementById(mode === 'foundIt' ? 'foundItList' : 'gaveItList');
+        targetList.innerHTML = '';
+
+        if (snapshot.empty) {
+          targetList.innerHTML = `<div class="bg-white/95 p-6 rounded-2xl text-center text-slate-500 border font-bold text-xs">No items listed in this section yet.</div>`;
+          return;
+        }
+
+        snapshot.forEach(docSnap => {
+          const item = docSnap.data();
+          if (mode === 'foundIt' && item.type !== 'lost') return;
+          if (mode === 'gaveIt' && item.type !== 'found') return;
+
+          targetList.innerHTML += `
+            <div class="bg-white/95 p-4 rounded-2xl border shadow-xl space-y-2">
+              <span class="bg-emerald-100 text-emerald-800 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase">✔️ COMPLETED</span>
+              <h3 class="text-base font-black text-slate-900">${item.title}</h3>
+              <p class="text-xs text-slate-700">${item.desc}</p>
+            </div>
+          `;
+        });
+      });
+    }
+
+    async function markCompleted(docId) {
       const itemRef = window.fs.doc(window.db, "items", docId);
+      await window.fs.updateDoc(itemRef, { isCompleted: true });
+      alert("Request marked as COMPLETED! Moved to Recovery lists.");
+    }
+
+    function openPrivateChat(docId, ownerName, itemTitle) {
+      activePrivateDocId = docId;
+      document.getElementById('chatPartnerName').innerText = `Talking with: ${ownerName}`;
+      document.getElementById('chatItemTitle').innerText = itemTitle;
+      openModal('privateChatModal');
+      listenPrivateChat(docId);
+    }
+
+    function listenPrivateChat(docId) {
+      const itemRef = window.fs.doc(window.db, "items", docId);
+      window.fs.onSnapshot(itemRef, (docSnap) => {
+        if (!docSnap.exists()) return;
+        const item = docSnap.data();
+        const chatBox = document.getElementById('privateChatMessages');
+        chatBox.innerHTML = '';
+
+        const chatKey = currentUser.name.replace(/\s+/g, '_');
+        const messages = (item.privateChats && item.privateChats[chatKey]) || [];
+
+        messages.forEach(m => {
+          chatBox.innerHTML += `
+            <div class="p-2 rounded-xl ${m.sender === currentUser.name ? 'bg-indigo-600 text-white ml-auto text-right max-w-[80%]' : 'bg-slate-200 text-slate-800 mr-auto text-left max-w-[80%]' }">
+              <p class="text-xs">${m.text}</p>
+            </div>
+          `;
+        });
+
+        const btnUnlock = document.getElementById('btnClaimUnlock');
+        const contactDetails = document.getElementById('privateContactDetails');
+
+        if (item.userName === currentUser.name) {
+          btnUnlock.classList.remove('hidden');
+        } else {
+          btnUnlock.classList.add('hidden');
+        }
+
+        if (item.handshakeUnlocked) {
+          contactDetails.innerHTML = `<strong>Name:</strong> ${item.userName} | <strong>Phone:</strong> ${item.userPhone} | <strong>Email:</strong> ${item.userEmail} | <strong>Class:</strong> ${item.userClass}`;
+        }
+      });
+    }
+
+    async function sendPrivateMessage(e) {
+      e.preventDefault();
+      const input = document.getElementById('privateChatInput');
+      if (!input.value.trim() || !activePrivateDocId) return;
+
+      const itemRef = window.fs.doc(window.db, "items", activePrivateDocId);
+      const chatKey = currentUser.name.replace(/\s+/g, '_');
+      
+      const msgObj = {
+        sender: currentUser.name,
+        text: input.value.trim(),
+        time: new Date().toLocaleTimeString()
+      };
+
+      await window.fs.updateDoc(itemRef, {
+        [`privateChats.${chatKey}`]: window.fs.arrayUnion(msgObj)
+      });
+
+      input.value = '';
+    }
+
+    async function triggerHandshakeClaim() {
+      if (!activePrivateDocId) return;
+      const itemRef = window.fs.doc(window.db, "items", activePrivateDocId);
       await window.fs.updateDoc(itemRef, { handshakeUnlocked: true });
+      alert("Handshake Confirmed! Contact details unlocked in this private session.");
     }
 
     function listenLiveVault() {
-      const q = window.fs.query(window.fs.collection(window.db, "vault"), window.fs.where("code", "==", currentUser.code));
+      const q = window.fs.query(window.fs.collection(window.db, "items"), window.fs.where("code", "==", currentUser.code), window.fs.where("type", "==", "found"));
       window.fs.onSnapshot(q, (snapshot) => {
         const vaultList = document.getElementById('vaultList');
         vaultList.innerHTML = '';
         if (snapshot.empty) {
-          vaultList.innerHTML = `<div class="bg-white p-8 rounded-2xl text-center text-slate-400 border">No items currently in the office vault.</div>`;
+          vaultList.innerHTML = `<div class="bg-white/95 p-6 rounded-2xl text-center text-slate-500 border font-bold text-xs">No found items currently in the office vault.</div>`;
           return;
         }
         snapshot.forEach(docSnap => {
           const v = docSnap.data();
           vaultList.innerHTML += `
-            <div class="bg-white p-4 rounded-2xl border flex justify-between items-center shadow-sm">
+            <div class="bg-white/95 p-4 rounded-2xl border flex justify-between items-center shadow-lg">
               <div>
-                <h4 class="font-bold text-sm">${v.title}</h4>
-                <p class="text-xs text-slate-500">${v.desc}</p>
+                <h4 class="font-bold text-sm text-slate-900">${v.title}</h4>
+                <p class="text-xs text-slate-500">📍 Found at: ${v.location} • Submitted by: ${v.userName}</p>
+                <p class="text-xs text-slate-600 mt-1">${v.desc}</p>
               </div>
-              <span class="bg-amber-100 text-amber-800 text-xs px-3 py-1 rounded-full font-bold">In Office Vault</span>
+              <span class="bg-amber-100 text-amber-800 text-xs px-3 py-1 rounded-full font-bold">In Security Office Vault</span>
             </div>
           `;
         });
