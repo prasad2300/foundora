@@ -68,12 +68,13 @@
   </header>
 
   <!-- HERO BANNER -->
-  <div class="relative bg-slate-900/30 backdrop-blur-xs text-white py-8 px-6 mb-6 overflow-hidden border-b border-slate-800 shadow-2xl">
-    <div class="relative max-w-6xl mx-auto text-center space-y-3">
+  <div class="relative bg-slate-900/30 backdrop-blur-xs text-white py-8 px-6 mb-4 overflow-hidden border-b border-slate-800 shadow-2xl">
+    <div class="relative max-w-6xl mx-auto text-center space-y-2">
       <span class="inline-block bg-indigo-600/90 text-indigo-100 text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest border border-indigo-400/40 shadow-lg">Official Campus Lost & Found Hub</span>
       <h2 class="text-2xl md:text-4xl font-black tracking-tight text-white drop-shadow-md">Lost or Found Something on Campus?<br/><span class="text-indigo-400">Report & Connect Live with Campus Peers</span></h2>
 
-      <div class="flex flex-wrap justify-center items-center gap-3 pt-2">
+      <!-- HERO BUTTONS CONTAINER: HIDDEN BEFORE LOGIN -->
+      <div id="heroActionBtns" class="flex flex-wrap justify-center items-center gap-3 pt-2 hidden">
         <button onclick="filterTypeFeed('lost')" id="btnFilterLost" class="bg-slate-800 hover:bg-slate-700 text-rose-300 font-bold px-4 py-2.5 rounded-xl shadow-lg border border-slate-700 text-xs uppercase tracking-wide transition">
           🔍 Lost Requests
         </button>
@@ -90,104 +91,104 @@
     </div>
   </div>
 
-  <main class="max-w-7xl mx-auto py-4 px-4 relative">
+  <main class="max-w-7xl mx-auto py-2 px-4 relative">
 
-    <!-- AUTH SECTION -->
-    <section id="authSection" class="max-w-md mx-auto bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border p-6 space-y-6">
-      <div class="flex border-b text-sm font-bold text-center">
-        <button id="btnTabStudent" onclick="authTab('student')" class="w-1/2 py-2 border-b-2 border-indigo-600 text-indigo-600">Student Portal</button>
-        <button id="btnTabCollege" onclick="authTab('college')" class="w-1/2 py-2 text-slate-400">College Admin Portal</button>
+    <!-- EXTRA WIDE AND REDUCED HEIGHT AUTHENTICATION SECTION (max-w-5xl, px-12 py-6) -->
+    <section id="authSection" class="max-w-5xl mx-auto bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl border border-slate-200/80 px-12 py-6 space-y-4">
+      <div class="flex border-b border-slate-200 text-sm font-bold text-center">
+        <button id="btnTabStudent" onclick="authTab('student')" class="w-1/2 py-2 border-b-2 border-indigo-600 text-indigo-600 transition">Student Portal</button>
+        <button id="btnTabCollege" onclick="authTab('college')" class="w-1/2 py-2 text-slate-400 hover:text-slate-600 transition">College Admin Portal</button>
       </div>
 
-      <div id="studentContainer" class="space-y-4">
+      <div id="studentContainer" class="space-y-3">
         <div class="flex bg-slate-100 p-1 rounded-xl text-xs font-bold text-center">
-          <button onclick="toggleSubAuth('student', 'reg')" id="sRegTab" class="w-1/2 py-1.5 rounded-lg bg-white shadow-sm text-indigo-600">Register</button>
-          <button onclick="toggleSubAuth('student', 'login')" id="sLogTab" class="w-1/2 py-1.5 text-slate-500">Login</button>
+          <button onclick="toggleSubAuth('student', 'reg')" id="sRegTab" class="w-1/2 py-1.5 rounded-lg bg-white shadow text-indigo-600 transition">Register</button>
+          <button onclick="toggleSubAuth('student', 'login')" id="sLogTab" class="w-1/2 py-1.5 text-slate-500 transition">Login</button>
         </div>
 
         <form id="formStudentReg" onsubmit="registerStudent(event)" class="space-y-3">
           <div>
-            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Full Student Name</label>
-            <input type="text" id="sName" required placeholder="Alex Turner" class="w-full px-3 py-2 border rounded-xl text-sm outline-none" />
+            <label class="block text-[11px] font-extrabold uppercase text-slate-600 mb-1">Full Student Name</label>
+            <input type="text" id="sName" required placeholder="Alex Turner" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-500" />
           </div>
-          <div class="grid grid-cols-2 gap-2">
+          <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Phone Number</label>
-              <input type="tel" id="sPhone" required placeholder="+1234567890" class="w-full px-3 py-2 border rounded-xl text-sm outline-none" />
+              <label class="block text-[11px] font-extrabold uppercase text-slate-600 mb-1">Phone Number</label>
+              <input type="tel" id="sPhone" required placeholder="+1234567890" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-500" />
             </div>
             <div>
-              <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Class / Dept</label>
-              <input type="text" id="sClass" required placeholder="CS - Year 3" class="w-full px-3 py-2 border rounded-xl text-sm outline-none" />
+              <label class="block text-[11px] font-extrabold uppercase text-slate-600 mb-1">Class / Dept</label>
+              <input type="text" id="sClass" required placeholder="CS - Year 3" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-500" />
             </div>
           </div>
           <div>
-            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Student College Email</label>
-            <input type="email" id="sEmail" required placeholder="student@college.edu" class="w-full px-3 py-2 border rounded-xl text-sm outline-none" />
+            <label class="block text-[11px] font-extrabold uppercase text-slate-600 mb-1">Student College Email</label>
+            <input type="email" id="sEmail" required placeholder="student@college.edu" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-500" />
           </div>
           <div>
-            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Account Password</label>
-            <input type="password" id="sPass" required placeholder="••••••••" class="w-full px-3 py-2 border rounded-xl text-sm outline-none" />
+            <label class="block text-[11px] font-extrabold uppercase text-slate-600 mb-1">Account Password</label>
+            <input type="password" id="sPass" required placeholder="••••••••" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-500" />
           </div>
-          <div class="bg-indigo-50 p-3 rounded-xl border border-indigo-100">
-            <label class="block text-xs font-bold uppercase text-indigo-800 mb-1">6-Digit College Code</label>
-            <input type="text" id="sCode" maxlength="6" required placeholder="e.g. 567323" class="w-full px-3 py-2 border font-mono tracking-widest text-center rounded-xl font-bold text-indigo-900 outline-none bg-white" />
+          <div class="bg-indigo-50/80 p-3 rounded-2xl border border-indigo-100">
+            <label class="block text-[11px] font-extrabold uppercase text-indigo-900 mb-1">6-Digit College Code</label>
+            <input type="text" id="sCode" maxlength="6" required placeholder="e.g. 567323" class="w-full px-3 py-2 border border-indigo-200 font-mono tracking-widest text-center rounded-xl font-bold text-sm text-indigo-950 outline-none bg-white focus:ring-2 focus:ring-indigo-500" />
           </div>
-          <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl shadow">Register Student</button>
+          <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold py-2.5 rounded-xl shadow-lg transition text-xs uppercase tracking-wider">Register Student</button>
         </form>
 
         <form id="formStudentLog" onsubmit="loginStudent(event)" class="space-y-3 hidden">
           <div>
-            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Registered Phone Number</label>
-            <input type="tel" id="sLogPhone" required placeholder="+1234567890" class="w-full px-3 py-2 border rounded-xl text-sm outline-none" />
+            <label class="block text-[11px] font-extrabold uppercase text-slate-600 mb-1">Registered Phone Number</label>
+            <input type="tel" id="sLogPhone" required placeholder="+1234567890" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-500" />
           </div>
           <div>
-            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Password</label>
-            <input type="password" id="sLogPass" required placeholder="••••••••" class="w-full px-3 py-2 border rounded-xl text-sm outline-none" />
+            <label class="block text-[11px] font-extrabold uppercase text-slate-600 mb-1">Password</label>
+            <input type="password" id="sLogPass" required placeholder="••••••••" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-500" />
           </div>
-          <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl shadow">Login to Student Portal</button>
+          <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold py-2.5 rounded-xl shadow-lg transition text-xs uppercase tracking-wider">Login to Student Portal</button>
         </form>
       </div>
 
-      <div id="collegeContainer" class="space-y-4 hidden">
+      <div id="collegeContainer" class="space-y-3 hidden">
         <div class="flex bg-slate-100 p-1 rounded-xl text-xs font-bold text-center">
-          <button onclick="toggleSubAuth('college', 'reg')" id="cRegTab" class="w-1/2 py-1.5 rounded-lg bg-white shadow-sm text-indigo-600">Register College</button>
-          <button onclick="toggleSubAuth('college', 'login')" id="cLogTab" class="w-1/2 py-1.5 text-slate-500">Admin Login</button>
+          <button onclick="toggleSubAuth('college', 'reg')" id="cRegTab" class="w-1/2 py-1.5 rounded-lg bg-white shadow text-indigo-600 transition">Register College</button>
+          <button onclick="toggleSubAuth('college', 'login')" id="cLogTab" class="w-1/2 py-1.5 text-slate-500 transition">Admin Login</button>
         </div>
 
         <form id="formCollegeReg" onsubmit="registerCollege(event)" class="space-y-3">
           <div>
-            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">College Name</label>
-            <input type="text" id="cName" required placeholder="State Institute of Tech" class="w-full px-3 py-2 border rounded-xl text-sm outline-none" />
+            <label class="block text-[11px] font-extrabold uppercase text-slate-600 mb-1">College Name</label>
+            <input type="text" id="cName" required placeholder="State Institute of Tech" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-500" />
           </div>
           <div>
-            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Address / Location</label>
-            <input type="text" id="cAddr" required placeholder="Campus Main Block, City" class="w-full px-3 py-2 border rounded-xl text-sm outline-none" />
+            <label class="block text-[11px] font-extrabold uppercase text-slate-600 mb-1">Address / Location</label>
+            <input type="text" id="cAddr" required placeholder="Campus Main Block, City" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-500" />
           </div>
           <div>
-            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">College Admin Email</label>
-            <input type="email" id="cEmail" required placeholder="admin@institute.edu" class="w-full px-3 py-2 border rounded-xl text-sm outline-none" />
+            <label class="block text-[11px] font-extrabold uppercase text-slate-600 mb-1">College Admin Email</label>
+            <input type="email" id="cEmail" required placeholder="admin@institute.edu" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-500" />
           </div>
           <div>
-            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Password</label>
-            <input type="password" id="cPass" required placeholder="••••••••" class="w-full px-3 py-2 border rounded-xl text-sm outline-none" />
+            <label class="block text-[11px] font-extrabold uppercase text-slate-600 mb-1">Password</label>
+            <input type="password" id="cPass" required placeholder="••••••••" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-500" />
           </div>
           <div>
-            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">College Center Code</label>
-            <input type="text" id="cCenter" required placeholder="CTR-9921" class="w-full px-3 py-2 border rounded-xl text-sm outline-none" />
+            <label class="block text-[11px] font-extrabold uppercase text-slate-600 mb-1">College Center Code</label>
+            <input type="text" id="cCenter" required placeholder="CTR-9921" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-500" />
           </div>
-          <button type="submit" class="w-full bg-slate-900 hover:bg-black text-white font-bold py-2.5 rounded-xl shadow">Register & Generate Unique Code</button>
+          <button type="submit" class="w-full bg-slate-900 hover:bg-black text-white font-extrabold py-2.5 rounded-xl shadow-lg transition text-xs uppercase tracking-wider">Register & Generate Unique Code</button>
         </form>
 
         <form id="formCollegeLog" onsubmit="loginCollege(event)" class="space-y-3 hidden">
           <div>
-            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">College Email</label>
-            <input type="email" id="cLogEmail" required placeholder="admin@institute.edu" class="w-full px-3 py-2 border rounded-xl text-sm outline-none" />
+            <label class="block text-[11px] font-extrabold uppercase text-slate-600 mb-1">College Email</label>
+            <input type="email" id="cLogEmail" required placeholder="admin@institute.edu" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-500" />
           </div>
           <div>
-            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Password</label>
-            <input type="password" id="cLogPass" required placeholder="••••••••" class="w-full px-3 py-2 border rounded-xl text-sm outline-none" />
+            <label class="block text-[11px] font-extrabold uppercase text-slate-600 mb-1">Password</label>
+            <input type="password" id="cLogPass" required placeholder="••••••••" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-500" />
           </div>
-          <button type="submit" class="w-full bg-slate-900 hover:bg-black text-white font-bold py-2.5 rounded-xl shadow">Login as College Admin</button>
+          <button type="submit" class="w-full bg-slate-900 hover:bg-black text-white font-extrabold py-2.5 rounded-xl shadow-lg transition text-xs uppercase tracking-wider">Login as College Admin</button>
         </form>
       </div>
     </section>
@@ -198,7 +199,7 @@
       <!-- MAIN FEED VIEW WITH ADJUSTED FIXED CATEGORIES SIDEBAR -->
       <div id="viewFeed" class="grid grid-cols-1 md:grid-cols-4 gap-6 items-start relative">
         
-        <!-- PROFESSIONALLY STYLED & POSITIONED CATEGORIES SIDEBAR (1 cm down & 1 cm left) -->
+        <!-- PROFESSIONALLY STYLED & POSITIONED CATEGORIES SIDEBAR -->
         <aside class="hidden md:block md:col-span-1">
           <div class="fixed left-3 top-[23rem] w-64 bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-950 backdrop-blur-2xl border-2 border-indigo-500/40 rounded-3xl p-5 shadow-2xl shadow-indigo-950/80 z-20 space-y-3">
             <div class="flex items-center gap-2.5 px-1 pb-2.5 border-b border-indigo-500/30">
@@ -469,13 +470,13 @@
       if (tab === 'student') {
         document.getElementById('studentContainer').classList.remove('hidden');
         document.getElementById('collegeContainer').classList.add('hidden');
-        document.getElementById('btnTabStudent').className = "w-1/2 py-2 border-b-2 border-indigo-600 text-indigo-600 font-bold";
-        document.getElementById('btnTabCollege').className = "w-1/2 py-2 text-slate-400 font-bold";
+        document.getElementById('btnTabStudent').className = "w-1/2 py-2 border-b-2 border-indigo-600 text-indigo-600 font-bold transition";
+        document.getElementById('btnTabCollege').className = "w-1/2 py-2 text-slate-400 font-bold hover:text-slate-600 transition";
       } else {
         document.getElementById('collegeContainer').classList.remove('hidden');
         document.getElementById('studentContainer').classList.add('hidden');
-        document.getElementById('btnTabCollege').className = "w-1/2 py-2 border-b-2 border-indigo-600 text-indigo-600 font-bold";
-        document.getElementById('btnTabStudent').className = "w-1/2 py-2 text-slate-400 font-bold";
+        document.getElementById('btnTabCollege').className = "w-1/2 py-2 border-b-2 border-indigo-600 text-indigo-600 font-bold transition";
+        document.getElementById('btnTabStudent').className = "w-1/2 py-2 text-slate-400 font-bold hover:text-slate-600 transition";
       }
     }
 
@@ -484,25 +485,25 @@
         if (mode === 'reg') {
           document.getElementById('formStudentReg').classList.remove('hidden');
           document.getElementById('formStudentLog').classList.add('hidden');
-          document.getElementById('sRegTab').className = "w-1/2 py-1.5 rounded-lg bg-white shadow-sm text-indigo-600 font-bold";
-          document.getElementById('sLogTab').className = "w-1/2 py-1.5 text-slate-500 font-medium";
+          document.getElementById('sRegTab').className = "w-1/2 py-1.5 rounded-lg bg-white shadow text-indigo-600 font-bold transition";
+          document.getElementById('sLogTab').className = "w-1/2 py-1.5 text-slate-500 font-medium transition";
         } else {
           document.getElementById('formStudentReg').classList.add('hidden');
           document.getElementById('formStudentLog').classList.remove('hidden');
-          document.getElementById('sLogTab').className = "w-1/2 py-1.5 rounded-lg bg-white shadow-sm text-indigo-600 font-bold";
-          document.getElementById('sRegTab').className = "w-1/2 py-1.5 text-slate-500 font-medium";
+          document.getElementById('sLogTab').className = "w-1/2 py-1.5 rounded-lg bg-white shadow text-indigo-600 font-bold transition";
+          document.getElementById('sRegTab').className = "w-1/2 py-1.5 text-slate-500 font-medium transition";
         }
       } else {
         if (mode === 'reg') {
           document.getElementById('formCollegeReg').classList.remove('hidden');
           document.getElementById('formCollegeLog').classList.add('hidden');
-          document.getElementById('cRegTab').className = "w-1/2 py-1.5 rounded-lg bg-white shadow-sm text-indigo-600 font-bold";
-          document.getElementById('cLogTab').className = "w-1/2 py-1.5 text-slate-500 font-medium";
+          document.getElementById('cRegTab').className = "w-1/2 py-1.5 rounded-lg bg-white shadow text-indigo-600 font-bold transition";
+          document.getElementById('cLogTab').className = "w-1/2 py-1.5 text-slate-500 font-medium transition";
         } else {
           document.getElementById('formCollegeReg').classList.add('hidden');
           document.getElementById('formCollegeLog').classList.remove('hidden');
-          document.getElementById('cLogTab').className = "w-1/2 py-1.5 rounded-lg bg-white shadow-sm text-indigo-600 font-bold";
-          document.getElementById('cRegTab').className = "w-1/2 py-1.5 text-slate-500 font-medium";
+          document.getElementById('cLogTab').className = "w-1/2 py-1.5 rounded-lg bg-white shadow text-indigo-600 font-bold transition";
+          document.getElementById('cRegTab').className = "w-1/2 py-1.5 text-slate-500 font-medium transition";
         }
       }
     }
@@ -624,6 +625,7 @@
         document.getElementById('authSection').classList.add('hidden');
         document.getElementById('appDashboard').classList.remove('hidden');
         document.getElementById('navControls').classList.remove('hidden');
+        document.getElementById('heroActionBtns').classList.remove('hidden');
         document.getElementById('headerCollegeInfo').innerText = `Campus Code: ${currentUser.code}`;
         document.getElementById('settingCode').value = currentUser.code;
         switchTab('feed');
@@ -631,6 +633,7 @@
         document.getElementById('authSection').classList.remove('hidden');
         document.getElementById('appDashboard').classList.add('hidden');
         document.getElementById('navControls').classList.add('hidden');
+        document.getElementById('heroActionBtns').classList.add('hidden');
       }
     }
 
